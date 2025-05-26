@@ -1,0 +1,31 @@
+{
+    "name": "githen/laravel-jdt",
+    "description": "基于laravel的校对通智能校对",
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+      "psr-4": {
+        "Githen\\LaravelJdt\\": "src"
+      }
+    },
+    "authors": [
+      {
+        "name": "nanjishidu",
+        "email": "yijialiu212@gmail.com"
+      }
+    ],
+    "require": {
+      "php": "^7.3",
+      "ext-json": "*",
+      "illuminate/support": "^6.20|^8.0",
+      "guzzlehttp/guzzle": "~6.0|^7.0"
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "Githen\\LaravelJdt\\Providers\\JdtServiceProvider"
+        ]
+      }
+    }
+  }
+  
