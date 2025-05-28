@@ -138,6 +138,23 @@ class JdtServiceProvider extends LaravelServiceProvider
         );
     }
 
+    /** 文本检测错误类型
+     * @param $method
+     * @param $text
+     * @return array|mixed
+     */
+    public function wbjcGetCorrectAbility()
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/get_correct_ability";
+        $resp = $this->httpPost($uri);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
     /** 文本校对接口
      * @param $method
      * @param $text
