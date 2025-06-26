@@ -216,13 +216,13 @@ class JdtServiceProvider extends LaravelServiceProvider
             $uri = $baseURL . $uri;
             $response = $httpClient->request('POST', $uri, $options);
             $content = json_decode($response->getBody()->getContents(), true);
-            if ($isLogin && $content['code'] == '30004') {
+            if ($isLogin && ($content['code'] == 30004 || $content['code'] == 400)) {
                 // 30004 token过期重试
                 $authorization = $this->getAccessToken(true);
                 if ($authorization['code'] != '0000') {
                     return $this->message($authorization['code'], $authorization['message']);
                 }
-                $options['headers']['accessToken'] = $authorization['data']['access_token'];
+                $options['form_params']['accessToken'] = $authorization['data']['access_token'];
                 $response = $httpClient->request(
                     'POST',
                     $uri,
