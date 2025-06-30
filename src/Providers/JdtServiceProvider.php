@@ -185,6 +185,23 @@ class JdtServiceProvider extends LaravelServiceProvider
         return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
     }
 
+    /** 获取文本校对用户信息状态接口
+     * @param $method
+     * @param $text
+     * @return array|mixed
+     */
+    public function wbjcGetWbjcAuthInfo()
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/get_wbjc_auth_info";
+        $resp = $this->httpPost($uri);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
     /**
      * @param $uri
      * @param $params
