@@ -43,9 +43,9 @@ class JdtServiceProvider extends LaravelServiceProvider
 
     /** 获取AccessToken
      * @param $refresh
-     * @return string
+     * @return array
      */
-    private function getAccessToken($refresh = false)
+    public function getAccessToken($refresh = false)
     {
         if (!$config = config('jdt')) {
             return $this->message('2000', "配置文件不存在");
@@ -56,33 +56,44 @@ class JdtServiceProvider extends LaravelServiceProvider
                 return $this->message('2000', "配置信息【" . $key . "】不能为空");
             }
         }
+        $accessToken = '';
         $disk = $config['disk'];
         $authFile = $config['auth_file'];
-        if (!$refresh && Storage::disk($disk)->has($authFile)) {
-            $obj = Storage::disk($disk)->get($authFile);
-            if (!empty($obj)) {
-                $obj = json_decode($obj, true);
-                if (!empty($obj['expire_time']) && $obj['expire_time'] - time() > 300) {
-                    return $this->message('0000', "登录成功", ['access_token' => $obj['access_token']]);
-                }
+        $timeUnix = time();
+        if (Storage::disk($disk)->has($authFile)) {
+            $obj = json_decode(Storage::disk($disk)->get($authFile), true);
+            $accessToken = $obj['access_token'] ?? '';
+            $expireTime = $obj['expire_time'] ?? 0;
+            if (!$refresh && $expireTime - $timeUnix > 300) {
+                return $this->message('0000', "登录成功", ['access_token' => $accessToken, 'expire_time' => $expireTime - $timeUnix]);
             }
         }
-        $loginAuthorize = $this->loginAuthorize($config['app_id']);
-        if ($loginAuthorize['code'] != '0000') {
-            return $this->message($loginAuthorize['code'], $loginAuthorize['message']);
+        if (!empty($config['custom_auth_func']) && function_exists($config['custom_auth_func'])) {
+            $loginToken = $config['custom_auth_func']($config['custom_auth_url'], [
+                'access_token' => $accessToken,
+            ]);
+        } else {
+            $loginAuthorize = $this->loginAuthorize($config['app_id']);
+            if ($loginAuthorize['code'] != '0000') {
+                return $this->message($loginAuthorize['code'], $loginAuthorize['message']);
+            }
+            $loginToken = $this->loginToken($config['app_id'], $config['app_secret'], $loginAuthorize['data']['authorization_code']);
         }
-        $loginToken = $this->loginToken($config['app_id'], $config['app_secret'], $loginAuthorize['data']['authorization_code']);
+
         if ($loginToken['code'] == '0000') {
             $obj = [
                 'access_token' => $loginToken['data']['access_token'],
-                'expire_time' => time() + intval($loginToken['data']['expire_time'] / 1000)
+                'expire_time' => $timeUnix + $loginToken['data']['expire_time']
             ];
             if (Storage::disk($disk)->has($authFile)) {
                 Storage::disk($disk)->put($authFile, json_encode($obj));
             } else {
                 Storage::disk($disk)->put($authFile, json_encode($obj), 'public');
             }
-            return $this->message('0000', "登录成功", ['access_token' => $obj['access_token']]);
+            return $this->message('0000', "登录成功", [
+                'access_token' => $obj['access_token'],
+                'expire_time' => $loginToken['data']['expire_time']
+            ]);
         }
         return $this->message($loginToken['code'], $loginToken['message']);
     }
@@ -133,7 +144,7 @@ class JdtServiceProvider extends LaravelServiceProvider
             $resp['message'],
             [
                 'access_token' => $resp['accessToken']['accessToken'] ?? '',
-                'expire_time' => $resp['accessToken']['expireIn'] ?? '',
+                'expire_time' => intval(($resp['accessToken']['expireIn'] ?? 0) / 1000),
             ]
         );
     }
