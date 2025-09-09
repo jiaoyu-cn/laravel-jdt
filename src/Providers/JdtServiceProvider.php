@@ -99,8 +99,8 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 获取授权码
-     * @param $appId
-     * @param $state
+     * @param $appId string 应用ID
+     * @param $state string 状态
      * @return array|mixed
      */
     public function loginAuthorize($appId, $state = '')
@@ -124,8 +124,9 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 获取 access_token
-     * @param $name
-     * @param $password
+     * @param $appId string 应用ID
+     * @param $appSecret string 应用密钥
+     * @param $authorizeCode string 授权码
      * @return array|mixed
      */
     public function loginToken($appId, $appSecret, $authorizeCode)
@@ -165,9 +166,9 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 文本校对接口
-     * @param $text  文本内容
-     * @param $abilityIds  能力id
-     * @param $sonUserId  子账号Id
+     * @param $text string 文本内容
+     * @param $abilityIds string 能力id
+     * @param $sonUserId string 子账号Id
      * @return array|mixed
      */
     public function wbjcArticleCorrectExternal($text, $abilityIds, $sonUserId = '')
@@ -208,9 +209,9 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 查询子账号
-     * @param $page 页码
-     * @param $pageCount 每页数量
-     * @param $searchValue 搜索值
+     * @param $page int 页码
+     * @param $pageCount int 每页数量
+     * @param $searchValue string 搜索值
      * @return array|mixed
      */
     public function wbjcGetSonUser($page = 1, $pageCount = 10, $searchValue = '')
@@ -233,7 +234,7 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 添加子账号
-     * @param $sonUserName  子账号名称
+     * @param $sonUserName string 子账号名称
      * @return array|mixed
      */
     public function wbjcAddSonUser($sonUserName)
@@ -251,8 +252,8 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 编辑子账号
-     * @param $updateSonUserId  子账号ID
-     * @param $sonUserName  子账号名称
+     * @param $updateSonUserId string 子账号ID
+     * @param $sonUserName string 子账号名称
      * @return array|mixed
      */
     public function wbjcUpdateSonUser($updateSonUserId, $sonUserName)
@@ -271,7 +272,7 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 删除子账号
-     * @param $delSonUserId  子账号ID
+     * @param $delSonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcDelSonUser($delSonUserId)
@@ -289,11 +290,11 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 获取自定义词列表
-     * @param $wordType  自定义词类型 1禁用词2敏感词3正词4错词5重点词
-     * @param $page  页码
-     * @param $pageCount  每页数量
-     * @param $searchWord  搜索词
-     * @param $sonUserId  子账号ID
+     * @param $wordType string 自定义词类型,1禁用词2敏感词3正词4错词5重点词
+     * @param $page int 页码
+     * @param $pageCount int 每页数量
+     * @param $searchWord string 搜索词
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcGetWordList($wordType, $page = 1, $pageCount = 10, $searchWord = '', $sonUserId = '')
@@ -323,10 +324,10 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 添加自定义词
-     * @param $wordType  自定义词类型 1禁用词(word_reason:禁用的原因)2敏感词(word_reason:敏感类型)3正词4错词(word_reason:正词)5重点词
-     * @param $wordText  词名称
-     * @param $wordReason  词原因
-     * @param $sonUserId  子账号ID
+     * @param $wordType string 自定义词类型,1禁用词(word_reason:禁用的原因)2敏感词(word_reason:敏感类型)3正词4错词(word_reason:正词)5重点词
+     * @param $wordText string 词名称
+     * @param $wordReason string 词原因
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcAddWord($wordType, $wordText, $wordReason = '', $sonUserId = '')
@@ -355,10 +356,10 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 编辑自定义词
-     * @param $detectionLexiconId  要操作的自定义词ID
-     * @param $wordText  词名称
-     * @param $wordReason  词原因
-     * @param $sonUserId  子账号ID
+     * @param $detectionLexiconId string 要操作的自定义词ID
+     * @param $wordText string 词名称
+     * @param $wordReason string 词原因
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcEditWord($detectionLexiconId, $wordText, $wordReason = '', $sonUserId = '')
@@ -384,8 +385,8 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 批量添加自定义词
-     * @param $words  自定义词库 格式：[['word_text' => 'a', 'word_reason' => 'b', 'word_type' => 1]]
-     * @param $sonUserId  子账号ID
+     * @param $words array 自定义词库 格式：[['word_text' => 'a', 'word_reason' => 'b', 'word_type' => 1]]
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcBatchAddWord($words = [], $sonUserId = '')
@@ -408,19 +409,19 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 通用-词操作状态
-     * @param $detectionLexiconIds  词库ID，多个逗号分隔，支持数组
-     * @param $status  状态1启用2停用
-     * @param $sonUserId  子账号ID
+     * @param $detectionLexiconIds string|array 词库ID，多个逗号分隔，支持数组
+     * @param $status string 状态1启用2停用
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
-    public function wbjcHandleWordStatus($detectionLexiconIds, $status = 1, $sonUserId = '')
+    public function wbjcHandleWordStatus($detectionLexiconIds, $status, $sonUserId = '')
     {
         $this->wbjcHandleWord(2, $detectionLexiconIds, $status, $sonUserId);
     }
 
     /** 通用-词操作删除
-     * @param $detectionLexiconIds  词库ID，多个逗号分隔，支持数组
-     * @param $sonUserId  子账号ID
+     * @param $detectionLexiconIds string|array 词库ID，多个逗号分隔，支持数组
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcDelWord($detectionLexiconIds, $sonUserId = '')
@@ -429,10 +430,10 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /** 通用-词操作
-     * @param $handleType  操作类型 2 启用停用 3 删除
-     * @param $detectionLexiconIds  词库ID，多个逗号分隔，支持数组
-     * @param $status  状态1启用2停用
-     * @param $sonUserId  子账号ID
+     * @param $handleType string 操作类型 2 启用停用 3 删除
+     * @param $detectionLexiconIds string|array 词库ID，多个逗号分隔，支持数组
+     * @param $status string 状态1启用2停用
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcHandleWord($handleType, $detectionLexiconIds, $status = 1, $sonUserId = '')
@@ -458,8 +459,8 @@ class JdtServiceProvider extends LaravelServiceProvider
     }
 
     /**  通用-清空词
-     * @param $wordType  自定义词类型 1禁用词2敏感词3正词4错词5重点词6自定义领导人职务7自定义领导人排序
-     * @param $sonUserId  子账号ID
+     * @param $wordType string 自定义词类型,1禁用词2敏感词3正词4错词5重点词6自定义领导人职务7自定义领导人排序
+     * @param $sonUserId string 子账号ID
      * @return array|mixed
      */
     public function wbjcDelAllWord($wordType, $sonUserId = '')
@@ -483,12 +484,188 @@ class JdtServiceProvider extends LaravelServiceProvider
         return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
     }
 
-    /**
-     * @param $uri
-     * @param $params
+    /** 添加机构
+     * @param $administrativeType string 行政级别1国家2省份3地市级4区/县5乡/镇6村
+     * @param $name  string 名称
+     * @param $level  string 等级1一级2二级3三级
+     * @param $pid  string 父级ID，非第一级机构的时候需要传
+     * @param $sonUserId  string 子账号ID
      * @return array|mixed
      */
-    public function httpPost($uri, $params = [], $headers = [], $isLogin = true)
+    public function wbjcAddMechanism($administrativeType, $name, $level = 1, $pid = 0, $sonUserId = '')
+    {
+        return $this->wbjcAddMechanismOrPost($administrativeType, 0, $name, $level, $pid, $sonUserId);
+    }
+
+    /** 添加职务
+     * @param $administrativeType string 行政级别1国家2省份3地市级4区/县5乡/镇6村
+     * @param $name  string 名称
+     * @param $sonUserId  string 子账号ID
+     * @return array|mixed
+     */
+    public function wbjcAddPost($administrativeType, $name, $sonUserId = '')
+    {
+        return $this->wbjcAddMechanismOrPost($administrativeType, 1, $name, 1, 0, $sonUserId);
+    }
+
+    /** 添加机构或者职务
+     * @param $administrativeType string 行政级别1国家2省份3地市级4区/县5乡/镇6村
+     * @param $type string 类型0机构1职务
+     * @param $name  string 名称
+     * @param $level  string 等级1一级2二级3三级
+     * @param $pid  string 父级ID，非第一级机构的时候需要传
+     * @param $sonUserId  string 子账号ID
+     * @return array|mixed
+     */
+    public function wbjcAddMechanismOrPost($administrativeType, $type, $name, $level = 0, $pid = 0, $sonUserId = '')
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/add_mechanism_or_post";
+        if (!in_array($administrativeType, [1, 2, 3, 4, 5, 6])) {
+            return $this->message('2000', '行政级别错误');
+        }
+        $params = [
+            'administrative_type' => $administrativeType,
+            'type' => $type,
+            'name' => $name,
+            'p_id' => $pid,
+        ];
+        if ($type == 0) {
+            $params['level'] = $level;
+        }
+        if (!empty($sonUserId)) {
+            $params['son_user_id'] = $sonUserId;
+        }
+        $resp = $this->httpPost($uri, $params);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
+    /** 获取领导人所有添加需要的数据
+     * @param $sonUserId  string 子账号ID
+     * @return array|mixed
+     */
+    public function wbjcGetLeaderSelectData($sonUserId = '')
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/get_leader_select_data";
+        $params = [];
+        if (!empty($sonUserId)) {
+            $params['son_user_id'] = $sonUserId;
+        }
+        $resp = $this->httpPost($uri, $params);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
+    /** 获取领导人列表
+     * @param $page  int 页码
+     * @param $pageCount  int 每页数量
+     * @param $searchWord  string 搜索词
+     * @param $sonUserId  string 子账号ID
+     * @return array|mixed
+     */
+    public function wbjcGetLeaderPeople($page = 1, $pageCount = 10, $searchWord = '', $sonUserId = '')
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/get_leader_people";
+        $params = [
+            'page' => $page,
+            'totalPage' => $pageCount,
+        ];
+        if (!empty($searchWord)) {
+            $params['search_word'] = $searchWord;
+        }
+        if (!empty($sonUserId)) {
+            $params['son_user_id'] = $sonUserId;
+        }
+        $resp = $this->httpPost($uri, $params);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
+    /** 添加领导人
+     * @param $administrativeType  string 行政级别1国家2省份3地市级4区/县5乡/镇6村
+     * @param $organIds  string 机构ID，多个用逗号间隔，支持数组
+     * @param $dutyId  string 职务ID
+     * @param $leaderName  string 领导人名称
+     * @param $otherParams  array 其他参数，省市区县
+     * @param $sonUserId  子账号ID
+     * @return array|mixed
+     */
+    public function wbjcAddLeaderPeople($administrativeType, $organIds, $dutyId, $leaderName, $otherParams = [], $sonUserId = '')
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/add_leader_people";
+        $params = [
+            'administrative_type' => $administrativeType,
+            'organ_ids' => is_array($organIds) ? implode(',', $organIds) : $organIds,
+            'duty_id' => $dutyId,
+            'leader_name' => $leaderName,
+        ];
+        if (!empty($sonUserId)) {
+            $params['son_user_id'] = $sonUserId;
+        }
+        $params = array_merge($params, $otherParams);
+        $resp = $this->httpPost($uri, $params);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
+    /** 编辑领导人
+     * @param $id  string 领导人ID
+     * @param $administrativeType  string 行政级别1国家2省份3地市级4区/县5乡/镇6村
+     * @param $organIds  string 机构ID，多个用逗号间隔，支持数组
+     * @param $dutyId  string 职务ID
+     * @param $leaderName  string 领导人名称
+     * @param $otherParams  array 其他参数，省市区县
+     * @param $sonUserId  string 子账号ID
+     * @return array|mixed
+     */
+    public function wbjcSaveLeaderPeople($id, $administrativeType, $organIds, $dutyId, $leaderName, $otherParams = [], $sonUserId = '')
+    {
+        $uri = "/dataapp/api/umei/fw/open/wbjc/save_leader_people";
+        $params = [
+            'id' => $id,
+            'administrative_type' => $administrativeType,
+            'organ_ids' => is_array($organIds) ? implode(',', $organIds) : $organIds,
+            'duty_id' => $dutyId,
+            'leader_name' => $leaderName,
+        ];
+        if (!empty($sonUserId)) {
+            $params['son_user_id'] = $sonUserId;
+        }
+        $params = array_merge($params, $otherParams);
+        $resp = $this->httpPost($uri, $params);
+        if ($resp['code'] == 200) {
+            $code = '0000'; //获取成功
+        } else {
+            $code = '2000'; //获取失败
+        }
+        return $this->message($code, $resp['message'] ?? $resp['msg'], $resp['data'] ?? []);
+    }
+
+    /**
+     * @param $uri string 接口地址
+     * @param $params array 请求参数
+     * @param $headers array 请求头
+     * @param $isLogin bool 是否登录
+     * @return array|mixed
+     */
+    public
+    function httpPost($uri, $params = [], $headers = [], $isLogin = true)
     {
         $baseURL = 'https://cloud-gateway.midu.com';
         $headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -543,7 +720,8 @@ class JdtServiceProvider extends LaravelServiceProvider
      * 返回一个匿名函数, 匿名函数若返回false 表示不重试，反之则表示继续重试
      * @return \Closure
      */
-    private function retryDecider()
+    private
+    function retryDecider()
     {
         return function (
             $retries,
@@ -576,7 +754,8 @@ class JdtServiceProvider extends LaravelServiceProvider
      * 返回一个匿名函数，该匿名函数返回下次重试的时间（毫秒）
      * @return \Closure
      */
-    private function retryDelay()
+    private
+    function retryDelay()
     {
         return function ($numberOfRetries) {
             return 1000 * $numberOfRetries;
@@ -590,7 +769,8 @@ class JdtServiceProvider extends LaravelServiceProvider
      * @param array $data
      * @return array
      */
-    private function message($code, $message, $data = [])
+    private
+    function message($code, $message, $data = [])
     {
         return ['code' => $code, 'message' => $message, 'data' => $data];
     }
