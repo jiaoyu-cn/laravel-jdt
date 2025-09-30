@@ -664,8 +664,7 @@ class JdtServiceProvider extends LaravelServiceProvider
      * @param $isLogin bool 是否登录
      * @return array|mixed
      */
-    public
-    function httpPost($uri, $params = [], $headers = [], $isLogin = true)
+    public function httpPost($uri, $params = [], $headers = [], $isLogin = true)
     {
         $baseURL = 'https://cloud-gateway.midu.com';
         $headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -684,6 +683,7 @@ class JdtServiceProvider extends LaravelServiceProvider
         $handlerStack->push(Middleware::retry($this->retryDecider(), $this->retryDelay()));
         $httpClient = new GuzzleHttpClient([
             'timeout' => 60,
+            'connect_timeout' => 10,
             'verify' => false,
             'handler' => $handlerStack,
         ]);
@@ -720,8 +720,7 @@ class JdtServiceProvider extends LaravelServiceProvider
      * 返回一个匿名函数, 匿名函数若返回false 表示不重试，反之则表示继续重试
      * @return \Closure
      */
-    private
-    function retryDecider()
+    private function retryDecider()
     {
         return function (
             $retries,
@@ -754,8 +753,7 @@ class JdtServiceProvider extends LaravelServiceProvider
      * 返回一个匿名函数，该匿名函数返回下次重试的时间（毫秒）
      * @return \Closure
      */
-    private
-    function retryDelay()
+    private function retryDelay()
     {
         return function ($numberOfRetries) {
             return 1000 * $numberOfRetries;
@@ -769,8 +767,7 @@ class JdtServiceProvider extends LaravelServiceProvider
      * @param array $data
      * @return array
      */
-    private
-    function message($code, $message, $data = [])
+    private function message($code, $message, $data = [])
     {
         return ['code' => $code, 'message' => $message, 'data' => $data];
     }
